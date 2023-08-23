@@ -27,4 +27,4 @@ function fn(arr, cash) {
     return obj;
 }
 
-console.log(fn([12, 3, 5, 6, 2, 15, 7], 3))
+console.log(fn([12, 3, 5, 6, 2, 15, 7], 2))
