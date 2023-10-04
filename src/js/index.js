@@ -140,10 +140,13 @@ const restart = document.querySelector('.js-restart');
 content.insertAdjacentHTML('beforeend', createMarkup())
 content.addEventListener('click', onClick);
 restart.addEventListener('click', onRestart);
+// назви ключів виносяться в змінні, бо до них будемо звертатися декілька разів
+const KEY_X = 'PlayerX';
+const KEY_O = 'PlayerO';
 let player = 'X';
 // масиви для збереження даних про ходи
-const stepX = [];
-const stepO =[];
+let stepX = JSON.parse(localStorage.getItem(KEY_X)) || [];
+let stepO = JSON.parse(localStorage.getItem(KEY_O)) || [];
 
 const win = [
     [1, 2, 3],
@@ -156,6 +159,41 @@ const win = [
     [3, 5, 7]
 ];
 
+function startGame() {
+    // console.dir(content);
+    // для HTML не приміняється forEach
+    // console.log(stepX);
+    // console.log(stepO);
+    [...content.children].forEach(item => {
+        const id = Number(item.dataset.id)
+        // console.log(id);
+        // console.log(stepX)
+        // console.log(stepX.includes(id))
+        if(stepX.includes(id)) {
+            item.textContent = 'X';
+        }else if(stepO.includes(id)){
+            item.textContent = 'O';
+
+        }
+    })
+}
+startGame();
+// приклад методів сам і еврі
+// const stepX = [2, 5, 3, 8, 9];
+// const test = [1, 2, 3]
+// // console.log(test.every(id => stepX.includes(id)))
+// const isTrue = test.every(id => stepX.includes(id));
+// // візьмемо наш масив win і подивимось чи ХОТЬ ОДИН його елемент item відповідає
+// console.log(win.some(item => console.log(item)))
+
+
+// перебираємо масив win методом some, далі на кожній ітерації some перебираємо масив stepX.push(id); методм every 
+// і дивимся, щоб співпали всі числа з виграшною комбінацією
+// метод every потребує щоб співпали всі значення, тільки тоді він видась TRUE
+function isWinner(arr) {
+    return win.some(item => item.every(id => arr.includes(id)))
+    }
+    
 function createMarkup() {
     let markup = '';
     for (let i = 1; i <= 9; i += 1)  {
@@ -167,24 +205,44 @@ markup += `<div class="item" data-id="${i}"></div>`
 function onClick(evt) {
     if (!evt.target.textContent) {
         evt.target.textContent = player;
-        console.dir(evt.target);
+        // console.dir(evt.target);
         const id = Number(evt.target.dataset.id);
-      
+    //   по дефолту переможця немає
+        let result;
         if(player === "X") {
-            stepX.push(id)
+            stepX.push(id);
+            localStorage.setItem(KEY_X, JSON.stringify(stepX));
+            result = isWinner(stepX);
+           
         }else {
             stepO.push(id)
+            localStorage.setItem(KEY_O, JSON.stringify(stepO));
+            result = isWinner(stepO);
+        }  
+      setTimeout(() =>{
+        if (result) {
+            alert(`Winner is ${player}`);
+            // очистити поле після того, як знайшли переможця
+            onRestart();
+            return;
         }
-       console.log('stepX', stepX);
-       console.log('stepO', stepO);
-        player = player === "X" ? "0" : "X";        
+        player = player === "X" ? "0" : "X";   
+      })
+     
+    //    console.log('stepX', stepX);
+    //    console.log('stepO', stepO);
+           
     } else {
         alert('Change!!!')
     }
 }
 
+
+
 function onRestart() {
     player = "X";
+    stepX =[];
+    stepO = [];
     content.innerHTML = createMarkup();
 }
 
