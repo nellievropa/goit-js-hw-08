@@ -141,16 +141,19 @@ content.insertAdjacentHTML('beforeend', createMarkup())
 content.addEventListener('click', onClick);
 restart.addEventListener('click', onRestart);
 let player = 'X';
+// масиви для збереження даних про ходи
+const stepX = [];
+const stepO =[];
 
 const win = [
     [1, 2, 3],
     [3, 6, 9],
-    [4, 5, 6,],
+    [4, 5, 6],
     [7, 8, 9],
     [1, 4, 7],
     [2, 5, 8],
     [1, 5, 9],
-    [3, 5, 7,]
+    [3, 5, 7]
 ];
 
 function createMarkup() {
@@ -158,12 +161,22 @@ function createMarkup() {
     for (let i = 1; i <= 9; i += 1)  {
 markup += `<div class="item" data-id="${i}"></div>`
     }
-    return markup
+    return markup;
 }
 
 function onClick(evt) {
     if (!evt.target.textContent) {
         evt.target.textContent = player;
+        console.dir(evt.target);
+        const id = Number(evt.target.dataset.id);
+      
+        if(player === "X") {
+            stepX.push(id)
+        }else {
+            stepO.push(id)
+        }
+       console.log('stepX', stepX);
+       console.log('stepO', stepO);
         player = player === "X" ? "0" : "X";        
     } else {
         alert('Change!!!')
