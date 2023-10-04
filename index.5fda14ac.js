@@ -1,2 +1,0 @@
-!function(){var t=document.querySelector(".content"),e=document.querySelector(".js-restart");t.insertAdjacentHTML("beforeend",r()),t.addEventListener("click",(function(t){t.target.textContent?alert("Change!!!"):(t.target.textContent=n,n="X"===n?"0":"X")})),e.addEventListener("click",(function(){n="X",t.innerHTML=r()}));var n="X";function r(){for(var t="",e=1;e<=9;e+=1)t+='<div class="item" data-id="'.concat(e,'"></div>');return t}}();
-//# sourceMappingURL=index.5fda14ac.js.map
