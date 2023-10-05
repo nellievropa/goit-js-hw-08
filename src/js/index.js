@@ -178,6 +178,7 @@ function startGame() {
     })
 }
 startGame();
+
 // приклад методів сам і еврі
 // const stepX = [2, 5, 3, 8, 9];
 // const test = [1, 2, 3]
@@ -241,8 +242,11 @@ function onClick(evt) {
 
 function onRestart() {
     player = "X";
-    stepX =[];
+    stepX = [];
     stepO = [];
+    localStorage.removeItem('KEY_X')
+    localStorage.removeItem('KEY_O')
+    // localStorage.clear()
     content.innerHTML = createMarkup();
 }
 
