@@ -132,14 +132,49 @@
 // }
 
 
+// майже сталий вираз
+// є функції save, яка відпоавідає за збереження данних та load, яка отримує значення з локалсторідж
+//  ці функції створюються, щоб зберігти час та сили і не повторювати код
+// бо операції з ключами локалсторіджа одні й ті самі
+
+const save = (key, value) => {
+    try {
+      const serializedState = JSON.stringify(value);
+      localStorage.setItem(key, serializedState);
+    } catch (error) {
+      console.error("Set state error: ", error.message);
+    }
+  };
+  
+//   викликаємо цю функцію і передаємо дані для збереження
+save('TEST:', {name:"Hello World!!"});
+save('TEST1:', "Hello all the World!!");
+
+  const load = key => {
+    try {
+      const serializedState = localStorage.getItem(key);
+      return serializedState === null ? undefined : JSON.parse(serializedState);
+    } catch (error) {
+      console.error("Get state error: ", error.message);
+    }
+  };
+  
+  console.log(load('TEST:'));
+
+  export default {
+    save,
+    load,
+  };
 
 
 
 const content = document.querySelector('.content')
 const restart = document.querySelector('.js-restart');
+// const winner = document.querySelector('.js-winner');
 content.insertAdjacentHTML('beforeend', createMarkup())
 content.addEventListener('click', onClick);
 restart.addEventListener('click', onRestart);
+// winner.addEventListener('click', onCurrentWinner);
 // назви ключів виносяться в змінні, бо до них будемо звертатися декілька разів
 const KEY_X = 'PlayerX';
 const KEY_O = 'PlayerO';
@@ -147,6 +182,14 @@ let player = 'X';
 // масиви для збереження даних про ходи
 let stepX = JSON.parse(localStorage.getItem(KEY_X)) || [];
 let stepO = JSON.parse(localStorage.getItem(KEY_O)) || [];
+
+// const WIN_X = 'сurrentWinX';
+// const WIN_O = 'сurrentWinO';
+// let сurrentWinX = 0;
+// let currentWinO = 0;
+
+// let winHistory_X = JSON.parse(localStorage.getItem(WIN_X));
+// let winHistory_O = JSON.parse(localStorage.getItem(WIN_O));
 
 const win = [
     [1, 2, 3],
@@ -204,6 +247,7 @@ markup += `<div class="item" data-id="${i}"></div>`
 }
 
 function onClick(evt) {
+
     if (!evt.target.textContent) {
         evt.target.textContent = player;
         // console.dir(evt.target);
@@ -214,11 +258,15 @@ function onClick(evt) {
             stepX.push(id);
             localStorage.setItem(KEY_X, JSON.stringify(stepX));
             result = isWinner(stepX);
+            // winHistory_X = сurrentWinX + 1;
+            // localStorage.setItem(WIN_X, JSON.stringify(winHistory_X));
            
         }else {
             stepO.push(id)
             localStorage.setItem(KEY_O, JSON.stringify(stepO));
             result = isWinner(stepO);
+            // winHistory_O = currentWinO + 1;
+            // localStorage.setItem(WIN_O, JSON.stringify(winHistory_O));
         }  
       setTimeout(() =>{
         if (result) {
@@ -238,7 +286,14 @@ function onClick(evt) {
     }
 }
 
-
+// function onCurrentWinner() {
+// if(winHistory_O < winHistory_X) {
+//     alert(`PlayerX won ${localStorage.getItem(WIN_X)} times`)
+// }else {
+//     alert(`PlayerX won ${localStorage.getItem(WIN_O)} times`)
+// }
+   
+// }
 
 function onRestart() {
     player = "X";
